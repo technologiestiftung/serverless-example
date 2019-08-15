@@ -4,8 +4,8 @@ service: tree-mongodb-api
 provider:
  name: aws
  runtime: nodejs10.x # set node.js runtime
- memorySize: 128 # set the maximum memory of the Lambdas in Megabytes
- timeout: 10 # the timeout is 10 seconds (default is 6 seconds)
+ memorySize: 1024 # set the maximum memory of the Lambdas in Megabytes
+ timeout: 120 # the timeout is 10 seconds (default is 6 seconds)
 #  stage: dev # setting the env stage to dev, this will be visible in the routes
 #  region: us-east-1
 functions: # add 4 functions for CRUD
@@ -54,6 +54,46 @@ functions: # add 4 functions for CRUD
     events:
       - http:
           path: trees
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - Startlower
+              - Text
+              - Access-Control-Allow-Headers
+              - Access-Control-Allow-Origin
+            allowCredentials: false
+  getAllType:
+    handler: handler.getAllType # path will be domain.name.com/dev/trees
+    events:
+      - http:
+          path: trees/type/{type}
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - Startlower
+              - Text
+              - Access-Control-Allow-Headers
+              - Access-Control-Allow-Origin
+            allowCredentials: false
+  getAllAge:
+    handler: handler.getAllAge # path will be domain.name.com/dev/trees
+    events:
+      - http:
+          path: trees/age/
           method: get
           cors:
             origin: '*'
