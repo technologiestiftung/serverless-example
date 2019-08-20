@@ -56,13 +56,58 @@ module.exports.getAllAge = (event, context, callback) => {
  connectToDatabase()
    .then(() => {
     // console.log(event);
-    Tree.find({ $and: [{"properties.STANDALTER": { $gt: event.queryStringParameters.start}}, {"properties.STANDALTER": { $lt: event.queryStringParameters.end}}]})
+    Tree.find({ $and: [{"properties.STANDALTER": { $gt: event.queryStringParameters.start}}, {"properties.STANDALTER": { $lt: event.queryStringParameters.end}}]}, {_id: 1})
                 .then(trees => callback(null, {
                     statusCode: 200,
                     headers: { 'Content-Type': 'text/plain',
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Credentials': true, },
-                    body: JSON.stringify({ ids: trees.map(tree => { return tree['_id'] }) })
+                    body: JSON.stringify(trees.map((tree) => { return tree['_id'] }))
+                }))
+                .catch(err => callback(null, {
+                    statusCode: err.statusCode || 500,
+                    headers: { 'Content-Type': 'text/plain',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true, },
+                    body: 'Could not fetch the trees.'
+                }))
+   });
+};
+
+module.exports.getAllAgeLimited = (event, context, callback) => {
+ context.callbackWaitsForEmptyEventLoop = false;
+ console.log(event);
+ connectToDatabase()
+   .then(() => {
+    Tree.find({ $and: [{"properties.STANDALTER": { $gt: event.queryStringParameters.start}}, {"properties.STANDALTER": { $lt: event.queryStringParameters.end}}]}, {_id: 1}).limit(Number(event.queryStringParameters.limit)).skip(Number(event.queryStringParameters.skip))
+                .then(trees => callback(null, {
+                    statusCode: 200,
+                    headers: { 'Content-Type': 'text/plain',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true, },
+                    body: JSON.stringify(trees.map((tree) => { return tree['_id'] }))
+                }))
+                .catch(err => callback(null, {
+                    statusCode: err.statusCode || 500,
+                    headers: { 'Content-Type': 'text/plain',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true, },
+                    body: 'Could not fetch the trees.'
+                }))
+   });
+};
+
+module.exports.countAllAge = (event, context, callback) => {
+ context.callbackWaitsForEmptyEventLoop = false;
+ connectToDatabase()
+   .then(() => {
+    Tree.find({ $and: [{"properties.STANDALTER": { $gt: event.queryStringParameters.start}}, {"properties.STANDALTER": { $lt: event.queryStringParameters.end}}]}, {_id: 1}).count()
+                .then(trees => callback(null, {
+                    statusCode: 200,
+                    headers: { 'Content-Type': 'text/plain',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true, },
+                    body: JSON.stringify(trees)
                 }))
                 .catch(err => callback(null, {
                     statusCode: err.statusCode || 500,

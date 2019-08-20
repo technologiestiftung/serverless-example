@@ -89,6 +89,46 @@ functions: # add 4 functions for CRUD
               - Access-Control-Allow-Headers
               - Access-Control-Allow-Origin
             allowCredentials: false
+  countAllAge:
+    handler: handler.countAllAge
+    events:
+      - http:
+          path: trees/age/count/
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - Startlower
+              - Text
+              - Access-Control-Allow-Headers
+              - Access-Control-Allow-Origin
+            allowCredentials: false
+  getAllAgeLimited:
+    handler: handler.getAllAgeLimited # path will be domain.name.com/dev/trees
+    events:
+      - http:
+          path: trees/age/limited/
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - Startlower
+              - Text
+              - Access-Control-Allow-Headers
+              - Access-Control-Allow-Origin
+            allowCredentials: false
   getAllAge:
     handler: handler.getAllAge # path will be domain.name.com/dev/trees
     events:
